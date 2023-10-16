@@ -21,17 +21,16 @@ def index():
 @app.route('/bakeries')
 def bakeries():
 
-    bakeries = Bakery.query.all()
+     bakeries = Bakery.query.all()
 
-    bakery_list =[
-    {
-        "name": bakery.name
-    }
-    for bakery in bakeries
-    ]
+    
+     bakeries_list = [bakery.to_dict() for bakery in bakeries]
 
-    response = make_response(jsonify(bakery_list), 200)
-    return response
+     response = make_response(jsonify(bakeries_list), 200)
+
+     response.headers["Content-Type"] = "application/json"
+
+     return response
 
 
 @app.route('/bakeries/<int:id>')
@@ -52,13 +51,7 @@ def baked_goods_by_price(price):
 
     baked_goods_by_price = BakedGood.query.filter(BakedGood.price<=price).order_by(BakedGood.price.desc()).all()
 
-    baked_goods_by_price_dict = [
-        {
-            "name": item.name,
-            "price": item.price
-        }
-        for item in baked_goods_by_price
-    ]
+    baked_goods_by_price_dict = [baked_good.to_dict() for baked_good in baked_goods_by_price]
 
     response =make_response(jsonify(baked_goods_by_price_dict), 200)
 
@@ -71,10 +64,9 @@ def most_expensive_baked_good():
     most_expensive = BakedGood.query.order_by(BakedGood.price.desc()).first()
 
     if most_expensive:
-        most_expensive_dict ={
-            "name": most_expensive.name,
-            "price": most_expensive.price
-        }
+        most_expensive_dict = most_expensive.to_dict()
+        
+        
         response = make_response(jsonify(most_expensive_dict), 200)
 
     else:
