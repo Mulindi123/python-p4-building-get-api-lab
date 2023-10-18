@@ -46,18 +46,24 @@ def bakery_by_id(id):
     return response
 
 
-@app.route('/baked_goods/<int:price>')
-def baked_goods_by_price(price):
+@app.route('/baked_goods/by_price')
+def baked_goods_by_price():
 
-    baked_goods_by_price = BakedGood.query.filter(BakedGood.price<=price).order_by(BakedGood.price.desc()).all()
+    # baked_goods_by_price = BakedGood.query.filter(BakedGood.price<=price).order_by(BakedGood.price.desc()).all()
 
-    baked_goods_by_price_dict = [baked_good.to_dict() for baked_good in baked_goods_by_price]
+    # baked_goods_by_price_dict = [baked_good.to_dict() for baked_good in baked_goods_by_price]
 
-    response =make_response(jsonify(baked_goods_by_price_dict), 200)
+    # response =make_response(jsonify(baked_goods_by_price_dict), 200)
 
-    response.headers["Content-Type"] = "application/json"
+    # response.headers["Content-Type"] = "application/json"
 
+    # return response
+
+    baked_goods =[baked_good.to_dict() for baked_good in BakedGood.query.order_by(db.desc("price")).all()]
+    response = make_response(jsonify(baked_goods), 200)
     return response
+
+
 
 @app.route('/baked_goods/most_expensive')
 def most_expensive_baked_good():
